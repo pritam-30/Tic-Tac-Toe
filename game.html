@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      background-color: black;
+      align-items: center;
+      text-align: center;
+    }
+    .game{
+      margin-left: 490px;
+      display: grid;
+      border:2px solid rgb(2, 255, 116);
+      color: white;
+      width: 250px;
+      height: 250px;
+      grid-template-columns: repeat(3, 84px);
+      grid-template-rows: repeat(3 , 84px);
+      border-radius: 10px;
+    }
+    .cell {    
+       font-family : cursive;
+       color: rgb(255, 0, 0);
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       border: 1px solid rgb(4, 255, 234);
+       font-size: 1em;
+       cursor: pointer;
+    }
+    button {
+      width: 200px;
+      border-radius:10px ;
+      margin-top: -30px;
+      padding: 10px 20px;
+      font-weight: bold;
+      background-color: rgba(255, 34, 0, 0.997);
+    }
+    .text {      
+      font-family : cursive;
+      color: rgb(255, 255, 255);
+      font-size: 50px;
+      margin-top: 20px;
+    }
+   
+  </style>
+</head>
+<body>
+  <div class="game">
+    
+  </div>
+  <p class="text"></p>
+  <!-- <p class="player"></p> -->
+  <button onclick="restart()">Restart</button>
+  <script>
+      let gameBoard = [ ["" , "" , "" ],
+                        ["" , "" , "" ],
+                        ["" , "" , "" ] ] ;
+      
+      let gameState = true ;               
+      let CurrentPlayer = "X";
+      CreateBoard(gameBoard);
+
+    function restart() {
+      // Iterate through the existing board and set each cell to an empty string
+       for (let i = 0; i < gameBoard.length; i++) {
+        for (let j = 0; j < gameBoard[i].length; j++) {
+            gameBoard[i][j] = '';
+        }
+        gameState = true ;               
+        CurrentPlayer = "X";
+    }
+
+    // Reset game state and current player
+    currentPlayer = "X";
+    gameState = true;
+    document.querySelector('.text').textContent = '';
+    // Update the HTML to reflect the cleared board
+      CreateBoard(gameBoard);
+    }  
+
+  function CreateBoard(gameBoard){
+    const container = document.querySelector('.game');
+    container.innerHTML = ''; // Clear the container
+    for (let row = 0; row < gameBoard.length; row++) {
+     for (let col = 0; col < gameBoard[row].length; col++) {
+    let cell = document.createElement("div");
+    cell.classList.add("cell");
+    cell.dataset.row = row ;
+    cell.dataset.col = col ;
+    cell.textContent = gameBoard[row][col];
+    cell.addEventListener('click', function() {   
+  if (cell.textContent === "" && CurrentPlayer === "X" && gameState) {
+    cell.textContent = "X";
+    gameBoard[row][col] = "X";
+    CurrentPlayer = "O";
+    document.querySelector('.text').textContent = `${CurrentPlayer}'s Turn`;
+    checkWin(gameBoard);   
+  }
+  if (gameState && CurrentPlayer === "O") {
+    ComputerMove();
+  }
+             // un-comment this if you want to play 2v2(not with the computer)
+  // else if (cell.textContent === "" && CurrentPlayer === "O" && gameState){
+  //   cell.textContent = "O";
+  //   gameBoard[row][col] = "O";
+  //   CurrentPlayer = "X";
+  //   document.querySelector('.text').textContent = `${CurrentPlayer}'s Turn`;
+  //   checkWin(gameBoard);          
+  //   }
+  });   
+      container.appendChild(cell);
+       }
+    }
+  }
+
+function ComputerMove() {
+  let availableCells = [];
+   for (let i = 0; i < gameBoard.length; i++) {
+    for (let j = 0; j < gameBoard.length; j++) {
+      if (gameBoard[i][j] === "") {
+        availableCells.push({row : i , col : j});
+      }      
+    }
+  }
+     if (availableCells.length > 0) {  
+      let randomIndex = Math.floor(Math.random() * availableCells.length);
+      let randomCell = availableCells[randomIndex];
+      const cellElement = document.querySelector(`.cell[data-row="${randomCell.row}"][data-col="${randomCell.col}"]`);
+      gameBoard[randomCell.row][randomCell.col] = CurrentPlayer;
+      cellElement.textContent = CurrentPlayer;
+      CurrentPlayer = "X";
+      document.querySelector('.text').textContent = `${CurrentPlayer}'s Turn`;
+      checkWin(gameBoard);   
+    } 
+  }
+
+function checkWin(gameBoard) {  
+  let winner = true ;
+  for (let i = 0; i < gameBoard.length; i++) {
+    if(gameBoard[i][0] && gameBoard[i].every(cell => cell === gameBoard[i][0])){
+     document.querySelector('.text').textContent = `${gameBoard[i][0]} wins`
+     gameState = false ;
+     winner = false ;
+    } 
+  }
+
+ for (let j = 0; j < gameBoard.length; j++) {
+  let column = [];
+   for (let i = 0; i < gameBoard.length; i++) {
+    column.push(gameBoard[i][j]); 
+   }
+   if(column[0] && column.every(cell => cell === column[0])){
+     document.querySelector('.text').textContent = `${column[0]} wins`
+     gameState = false ;
+     winner = false ;
+   }
+  }
+        
+let firstDiagCell = gameBoard[0][0]; 
+  if (firstDiagCell && gameBoard.every((row, index) => row[index] === firstDiagCell)) {
+     document.querySelector('.text').textContent = `${firstDiagCell} Wins`
+     gameState = false ;
+     winner = false ;
+     }
+
+ // Top-ht to bottom-left
+ let secondDiagCell = gameBoard[0][gameBoard.length - 1];
+ if (secondDiagCell && gameBoard.every((row, index) => row[gameBoard.length - 1 - index] === secondDiagCell)) {
+    document.querySelector('.text').textContent = `${secondDiagCell} wins`
+    gameState = false ;
+    winner = false ;
+ }
+
+if (winner) {
+  let store = gameBoard.every(row => row.every(cell => cell !== ""));
+  if(store){
+      document.querySelector('.text').textContent = "Draw"
+      gameState = false ;
+  }
+ }    
+}
+
+
+</script>
+</body>
+</html>
