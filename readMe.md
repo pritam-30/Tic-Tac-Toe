@@ -10,7 +10,7 @@ In this game you can play with the computer
 
 if you want to play with your friend then that's possible too.
 
-to play with a friend you just need the code that's been commented.
+To play with a friend you just need to uncomment the code that's been commented.
 
 # Happy Tic Tac Toe.
 
