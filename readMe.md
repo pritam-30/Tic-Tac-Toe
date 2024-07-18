@@ -1,8 +1,17 @@
-This is a tic tac toe game.
+# This is a tic tac toe game.
+
 I built this game using html css and javaScript
+
 You can see the code for this game in "game.html".
-All the code is in html file only , i put javascript css in HTML only.
+
+All the code is in html file only i put javascript css in HTML only.
+
 In this game you can play with the computer
-if you want to play with your friend then that's possible too , to play with a friend you just need the code that's been commented.
+
+if you want to play with your friend then that's possible too.
+
+to play with a friend you just need the code that's been commented.
 
 # Happy Tic Tac Toe.
+
+                   
