@@ -1,4 +1,4 @@
-# This is a tic tac toe game.
+# This is the tic tac toe game.
 
 I built this game using html css and javaScript
 
